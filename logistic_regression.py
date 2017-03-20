@@ -28,7 +28,7 @@ predRidge = ridgeModel.predict(xtest_matrix)
 # logistic regression L2 regurlization
 
 lr = LogisticRegression(C=10)
-lrModel = lr.fit(standardized_X.reshape(len(X),1),t)
+lrModel = lr.fit(standardized_X.reshape(len(X),1),np.ravel(t))
 
 predLog = lrModel.predict(xtest_matrix)
 plt.plot(xtest,predRidge,'r')
@@ -36,21 +36,22 @@ plt.plot(xtest,predLog,'y')
 plt.title('problem2 part(b) plot')
 plt.show()
 
-# (c)
-new_a = [12]
-new_a = preprocessing.scale(new_a)
-new_a = np.asarray(new_a).transpose()
-x_new = np.hstack((standardized_X,new_a))
+print('w1 for logit is: ',lrModel.coef_)
+print('w0 for logit is: ',lrModel.intercept_)
+print('w1 for ridge is: ',ridgeModel.coef_)
+print('w0 for ridge is: ',ridgeModel.intercept_)
 
-new_b = [1]
-new_b = np.asarray(new_b).transpose()
-print('new_b--',new_b)
-t_new = np.vstack((t,new_b))
-print('t_new--',t_new)
+# (c)
+new_a = np.append(X,12)
+new_a = preprocessing.scale(new_a)
+x_new = np.asarray(new_a).transpose()
+
+new_b = np.append(t,1)
+t_new = np.asarray(new_b).transpose()
 
 ### new ridge regression
 ridgeModel2 = linear_model.Ridge(alpha=0.1)
-ridgeModel2.fit(x_new.reshape(len(X)+1,1),t_new)
+ridgeModel2.fit(x_new.reshape(len(X)+1,1),np.ravel(t_new))
 
 predRidge2 = ridgeModel2.predict(xtest_matrix)
 plt.plot(xtest,predRidge2,'b')
@@ -67,3 +68,7 @@ plt.plot(xtest,predLog2,'g')
 plt.title('problem2 part(c) plot')
 plt.show()
 
+print('w1 for logit is: ',lrModel2.coef_)
+print('w0 for logit is: ',lrModel2.intercept_)
+print('w1 for ridge is: ',ridgeModel2.coef_)
+print('w0 for ridge is: ',ridgeModel2.intercept_)
